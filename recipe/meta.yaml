@@ -17,7 +17,7 @@ build:
     - pip = pip:main
 
 requirements:
-  build:
+  host:
     - python
     - setuptools
   run:
@@ -48,3 +48,4 @@ extra:
     - msarahan
     - pelson
     - ocefpaf
+    - mingwandroid
