@@ -11,8 +11,14 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
+  # remove all the things that pip vendors - use our own
+  #    this is only important on windows, where we bump into path length limits.
+  patches:
+    - unbundle.patch   # [win]
+
 build:
-  number: 2
+  number: 3
+  disable_pip: True
   entry_points:
     - pip = pip:main
 
@@ -24,6 +30,18 @@ requirements:
     - python
     - setuptools
     - wheel
+    # these are things that pip vendors, but vendoring makes the paths on Windows too long
+    - cachecontrol   # [win]
+    - colorama       # [win]
+    - distlib        # [win]
+    - html5lib       # [win]
+    - lockfile       # [win]
+    - packaging      # [win]
+    # part of setuptools, I think
+    # - pkg_resources  # [win]
+    - progress       # [win]
+    - requests       # [win]
+    - webencodings   # [win]
 
 test:
   commands:
