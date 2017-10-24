@@ -11,13 +11,14 @@ source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: {{ sha256 }}
 
-  # remove all the things that pip vendors - use our own
-  #    this is only important on windows, where we bump into path length limits.
+  # We update  windows to avoid path length issues.  Requests was the offender, with vendoring its stuff, too.
+  #    Requests has unvendored in more recent versions, so updating the vendoring is enough to fix things.
   patches:
-    - unbundle.patch   # [win]
+    - 0001-update-vendorings-to-match-master.patch            # [win]
+    - 0002-fix-up-references-to-vendored-requests-deps.patch  # [win]
 
 build:
-  number: 3
+  number: 4
   disable_pip: True
   entry_points:
     - pip = pip:main
@@ -30,18 +31,6 @@ requirements:
     - python
     - setuptools
     - wheel
-    # these are things that pip vendors, but vendoring makes the paths on Windows too long
-    - cachecontrol   # [win]
-    - colorama       # [win]
-    - distlib        # [win]
-    - html5lib       # [win]
-    - lockfile       # [win]
-    - packaging      # [win]
-    # part of setuptools, I think
-    # - pkg_resources  # [win]
-    - progress       # [win]
-    - requests       # [win]
-    - webencodings   # [win]
 
 test:
   commands:
